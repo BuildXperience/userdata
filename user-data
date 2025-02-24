@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Update system
+sudo apt update -y && sudo apt upgrade -y
+
+# Install dependencies
+sudo apt install -y curl git nginx
+
+# Install Node.js LTS (versi terbaru yang stabil)
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verifikasi instalasi Node.js dan NPM
+node -v
+npm -v
+
+# Clone repository frontend
+cd /home/ubuntu
+git clone https://github.com/ArdhanFah/latihan-lks-frontend.git
+cd latihan-lks-frontend
+
+cat <<EOF > .env
+VITE_API_URL="http://your-backend-ip/api"
+EOF
+
+npm install
+npm run build
+
+sudo mv dist /var/www/vue-frontend
+
+# Konfigurasi Nginx tanpa proxy_pass
+sudo tee /etc/nginx/sites-available/vue-frontend > /dev/null <<EOF
+server {
+    listen 80;
+    server_name _;
+
+    root /var/www/vue-frontend;
+    index index.html;
+
+    location / {
+        try_files \$uri /index.html;
+    }
+}
+EOF
+
+# Aktifkan konfigurasi dan restart Nginx
+sudo ln -s /etc/nginx/sites-available/vue-frontend /etc/nginx/sites-enabled/00-vue
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo systemctl restart nginx
+
+# Ubah kepemilikan file agar dapat diakses oleh user Nginx
+sudo chown -R www-data:www-data /var/www/vue-frontend
+
+# Selesai
+echo "Vue.js frontend telah berhasil di-deploy dengan Nginx!"
