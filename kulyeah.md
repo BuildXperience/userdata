@@ -14,3 +14,4 @@
 | **Dukungan Audio** | Dolby Digital, DTS | Tempest 3D AudioTech |
 | **Backward Compatibility** | PlayStation 1 | Sebagian besar game PlayStation 4 |
 | **Kontroler** | DualShock 2 | DualSense (dengan haptic feedback dan adaptive triggers) |
+| **Harga Saat ini** | IDR 350.000-800.000 | IDR 7.000.000 - 15.000.000 |
